@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>p5.js Fullscreen Sketch</title>
+   <link rel="stylesheet" href="waytohome.css" />
+  <script src="https://cdn.jsdelivr.net/npm/p5@1.4.0/lib/p5.min.js"></script>
+</head>
+<body>
+
+    <header class="page-header">
+    <div class="header-left">
+        
+        <a href="face.html">
+        <img src="images/back.png" alt="返回" class="btn-icon back-btn" />
+        </a>
+    </div>
+    <div class="header-right">
+        <a href="end.html">
+        <img src="images/next.png" alt="下一页" class="btn-icon next-btn" />
+        </a>
+    </div>
+    </header>
+
+  
+  <script>
+    let x, y;
+    let r, g, b;
+
+    function setup() {
+      
+      createCanvas(windowWidth, windowHeight);
+      x = width / 2;
+      y = height / 2;
+
+      r = random(255);
+      g = random(255);
+      b = random(255);
+
+      background(50);
+    }
+
+    function draw() {
+      
+      for (let i = 0; i < 1000; i++) {
+        step();
+      }
+    }
+
+    function step() {
+      x += random(-1, 1);
+      y += random(-1, 1);
+
+      x = constrain(x, 0, width);
+      y = constrain(y, 0, height);
+
+      r += random(-1, 1);
+      g += random(-1, 1);
+      b += random(-1, 1);
+
+      r = constrain(r, 0, 255);
+      g = constrain(g, 0, 255);
+      b = constrain(b, 0, 255);
+
+      stroke(r, g, b);
+      point(x, y);
+    }
+
+    
+    function windowResized() {
+      resizeCanvas(windowWidth, windowHeight);
+      
+      x = width / 2;
+      y = height / 2;
+      
+    }
+  </script>
+</body>
+</html>

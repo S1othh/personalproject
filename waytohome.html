@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>分叉路口互动示例</title>
+  <link rel="stylesheet" href="waytohome.css" />
+</head>
+<body>
+
+    <header class="page-header">
+    <div class="header-left">
+        
+        <a href="vetgetable.html">
+        <img src="images/back.png" alt="返回" class="btn-icon back-btn" />
+        </a>
+    </div>
+    <div class="header-right">
+        <a href="square.html">
+        <img src="images/next.png" alt="下一页" class="btn-icon next-btn" />
+        </a>
+    </div>
+    </header>
+
+ 
+  <div class="wrapper">
+   
+    <img src="images/wmremove-transformed.png" alt="分叉路口" class="fork-image" />
+
+   
+    <div class="button-row">
+      <img src="images\left.png" alt="左箭头" id="leftBtn" class="arrow-button" />
+      <img src="images\right.png" alt="右箭头" id="rightBtn" class="arrow-button" />
+    </div>
+
+   
+    <p id="sentence" class="sentence-text"></p>
+  </div>
+
+ 
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      
+      const sentences = [
+        'I should go left here.',
+        'I should turn right when I pass that bakery.',
+        'Ah I should buy some snacks at the store ahead and then head left.',
+        'When did a fruits store open here? I might buy some to take home as well.',
+        'Where is this place? Why do I suddenly forget where to go home?'
+      ];
+      let currentIndex = 0;
+
+      
+      const sentenceEl = document.getElementById('sentence');
+      
+      sentenceEl.textContent = sentences[currentIndex];
+
+     
+      function goNext() {
+        if (currentIndex < sentences.length - 1) {
+          currentIndex++;
+          sentenceEl.textContent = sentences[currentIndex];
+
+          
+          if (currentIndex === 4) {
+            document.body.style.backgroundColor = 'red';
+          }
+        }
+        
+      }
+
+      
+      document.getElementById('leftBtn').addEventListener('click', goNext);
+      document.getElementById('rightBtn').addEventListener('click', goNext);
+    });
+  </script>
+</body>
+</html>

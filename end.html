@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>交互式实心圆圈与文字</title>
+  <script src="https://cdn.jsdelivr.net/npm/p5@1.4.0/lib/p5.min.js"></script>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      font-family: sans-serif;
+    }
+    .center-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(255, 255, 255, 0.8);
+      padding: 12px 18px;
+      border-radius: 6px;
+      font-size: 24px;
+      cursor: pointer;
+      user-select: none;
+      z-index: 2; /* layer up */
+    }
+    .bottom-button {
+      position: absolute;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #4CAF50;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 18px;
+      cursor: pointer;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      transition: background-color 0.3s, transform 0.2s;
+      user-select: none;
+      z-index: 2; /* button layer up */
+    }
+    .bottom-button:hover {
+      background-color: #01a43f;
+      transform: translateX(-50%) translateY(-2px);
+    }
+  </style>
+</head>
+<body>
+  <script>
+    let innerCircles = [];
+    let middleCircles = [];
+    let outerCircles = [];
+    const border = 20;
+    const sentences = [
+      "This is the end of my story. That was what I experienced.",
+      "I love my family and I hope they won't worry about me. I just want them to be happy.",
+      "I am grad that you listen to my story. By the way, what's your name?"
+    ];
+    let sentenceIndex = 0;
+    let centerTextElem = null;
+    let bottomButton = null;
+    let cnv;
+
+    function setup() {
+      cnv = createCanvas(windowWidth, windowHeight);
+      cnv.style('position', 'absolute');
+      cnv.style('top', '0');
+      cnv.style('left', '0');
+      cnv.style('z-index', '1'); 
+
+      for (let i = 0; i < 40; i++) {
+        innerCircles.push(new Circle(random(border, width - border), random(border, height - border), 30));
+      }
+      for (let i = 0; i < 80; i++) {
+        middleCircles.push(new Circle(random(border, width - border), random(border, height - border), 40));
+      }
+      for (let i = 0; i < 120; i++) {
+        outerCircles.push(new Circle(random(border, width - border), random(border, height - border), 50));
+      }
+    }
+
+    function draw() {
+      background(0, 0, 255); 
+
+      noStroke();
+      fill('#8B0000'); 
+
+      for (let c of outerCircles) {
+        circle(c.x, c.y, c.r * 2);
+      }
+      for (let c of middleCircles) {
+        circle(c.x, c.y, c.r * 2);
+      }
+      for (let c of innerCircles) {
+        circle(c.x, c.y, c.r * 2);
+      }
+    }
+
+    function mousePressed() {
+      for (let i = innerCircles.length - 1; i >= 0; i--) {
+        if (innerCircles[i].contains(mouseX, mouseY)) {
+          innerCircles.splice(i, 1);
+          triggerSentence();
+          return;
+        }
+      }
+      for (let i = middleCircles.length - 1; i >= 0; i--) {
+        if (middleCircles[i].contains(mouseX, mouseY)) {
+          middleCircles.splice(i, 1);
+          return;
+        }
+      }
+      for (let i = outerCircles.length - 1; i >= 0; i--) {
+        if (outerCircles[i].contains(mouseX, mouseY)) {
+          outerCircles.splice(i, 1);
+          return;
+        }
+      }
+    }
+
+    function triggerSentence() {
+      if (sentenceIndex < sentences.length) {
+        showCenterText(sentences[sentenceIndex]);
+      }
+    }
+
+    function showCenterText(txt) {
+      if (centerTextElem) {
+        centerTextElem.remove();
+      }
+      centerTextElem = createDiv(txt);
+      centerTextElem.class('center-text');
+      centerTextElem.mousePressed(() => {
+        centerTextElem.remove();
+        sentenceIndex++;
+        if (sentenceIndex < sentences.length) {
+          showCenterText(sentences[sentenceIndex]);
+        } else {
+          showBottomButton("My name is Lan.");
+        }
+      });
+    }
+
+    function showBottomButton(label) {
+      if (bottomButton) return;
+      bottomButton = createButton(label);
+      bottomButton.class('bottom-button');
+      bottomButton.mousePressed(() => {
+        bottomButton.remove();
+        bottomButton = null;
+        if (centerTextElem) {
+          centerTextElem.remove();
+        }
+        centerTextElem = createDiv("Ah, My granddaughter is also called Lan.");
+        centerTextElem.class('center-text');
+        centerTextElem.mousePressed(() => {
+          centerTextElem.remove();
+          centerTextElem = null;
+          const endElem = createDiv("THE END");
+        endElem.class('center-text');
+        });
+      });
+    }
+
+    class Circle {
+      constructor(x, y, r) {
+        this.x = x;
+        this.y = y;
+        this.r = r;
+      }
+      contains(px, py) {
+        return dist(px, py, this.x, this.y) <= this.r;
+      }
+    }
+
+    function windowResized() {
+      resizeCanvas(windowWidth, windowHeight);
+    }
+  </script>
+</body>
+</html>

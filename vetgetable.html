@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="stylesheet" href="styles.css" />
+  <title>固定蔬菜悬停效果示例</title>
+</head>
+<body>
+   <header class="page-header">
+  <div class="header-left">
+    <a href="storydot.html">
+      <img src="images/back.png" alt="返回" class="btn-icon back-btn" />
+    </a>
+  </div>
+  <div class="header-right">
+    <a href="waytohome.html">
+    <img src="images/next.png" alt="下一页" class="btn-icon next-btn" />
+    </a>
+  </div>
+</header>
+
+  <div class="vegetable veg1">
+  <img src="images\corn.png" alt="corn" draggable="false" />
+  <span class="caption">She loves corn, so every time I go shopping I make sure to buy plump ears of corn to cook into soup for her. </span>
+</div>
+
+<div class="vegetable veg2">
+  <img src="images\broccoli.png" alt="broccoli" draggable="false" />
+  <span class="caption">She also enjoys broccoli—garlic stir-fried broccoli is her very favorite.</span>
+</div>
+
+<div class="vegetable veg4">
+  <img src="images\cabbage.png" alt="cabbage" draggable="false" />
+  <span class="caption">My granddaughter doesn't care for cabbage, but I always remind her that eating more vegetables is good for her health.</span>
+</div>
+
+<div class="vegetable scribble veg3">
+  <img src="images\mushroom.png" alt="mushroom" draggable="false" />
+  <div class="overlay"></div>
+</div>
+
+<div class="vegetable scribble veg5">
+  <img src="images\lettuce.png" alt="lettuce" draggable="false" />
+  <div class="overlay"></div>
+</div>
+
+<script>
+    
+    document.addEventListener('DOMContentLoaded', function() {
+      
+      const scribbleItems = document.querySelectorAll('.vegetable.scribble');
+
+      scribbleItems.forEach(item => {
+        item.addEventListener('mouseenter', () => {
+          
+          document.body.style.backgroundColor = '#BA191C';
+
+        });
+        item.addEventListener('mouseleave', () => {
+          
+          document.body.style.backgroundColor = '#161dd5';
+        });
+      });
+    });
+  </script>
+
+</body>
+</html>

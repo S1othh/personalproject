@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Parallax Dots with Title and Button</title>
+  <script src="https://cdn.jsdelivr.net/npm/p5@1.4.0/lib/p5.min.js"></script>
+  <style>
+    .aesthetic-button {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      padding: 12px 2px;
+      border-radius: 5px;
+      font-size: 17px;
+      cursor: pointer;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      transition: background-color 0.3s, transform 0.2s;
+    }
+    .aesthetic-button:hover {
+      background-color: #45a049;
+      transform: translateY(-2px);
+    }
+  </style>
+</head>
+<body>
+  <script>
+    const dots = [];
+    const border = 20;
+    let titleBtn;
+
+    function setup() {
+      createCanvas(windowWidth, windowHeight);
+      textFont('Arial');
+      textAlign(CENTER, CENTER);
+      textSize(48);
+      for (let layer = 1; layer <= 3; layer++) {
+        for (let i = 0; i < 200; i++) {
+          dots.push(new Dot(layer));
+        }
+      }
+      titleBtn = createButton('start the story');
+      titleBtn.addClass('aesthetic-button');
+      titleBtn.size(150, 40);
+      titleBtn.position((windowWidth - 150) / 2, windowHeight / 2 + 20);
+
+       titleBtn.mousePressed(() => {
+            window.location.href = 'storydot.html';
+        });
+    }
+
+    function draw() {
+      background(0, 0, 255);
+      fill(255);
+      noStroke();
+      textSize(72); 
+      text('Alzheimer', width / 2, height / 2 - 30);
+      for (const dot of dots) {
+        dot.draw();
+      }
+
+       
+    }
+
+    class Dot {
+      constructor(layer) {
+        this.layer = layer;
+        this.x = random(-border, width + border);
+        this.y = random(-border, height + border);
+        const colors = [
+          [255, 255, 255],
+          [0, 0, 0],
+          [173, 216, 230],
+          [255, 165, 0]
+        ];
+        const c = random(colors);
+        this.r = c[0];
+        this.g = c[1];
+        this.b = c[2];
+      }
+
+      draw() {
+        let deltaX = 0;
+        let deltaY = 0;
+        if (mouseX !== 0 && mouseY !== 0) {
+          deltaX = -this.layer * map(mouseX - width / 2, 0, width, 0, 5);
+          deltaY = -this.layer * map(mouseY - height / 2, 0, height, 0, 5);
+        }
+        this.x += deltaX;
+        this.y += deltaY;
+        if (this.x < -border) {
+          this.x = width + random(border);
+          this.y = random(0, height);
+        } else if (this.x > width + border) {
+          this.x = -random(border);
+          this.y = random(0, height);
+        }
+        if (this.y < -border) {
+          this.y = height + random(border);
+          this.x = random(0, width);
+        } else if (this.y > height + border) {
+          this.y = -random(border);
+          this.x = random(0, width);
+        }
+        fill(this.r, this.g, this.b);
+        circle(this.x, this.y, 10 / (4 - this.layer));
+      }
+    }
+
+    function windowResized() {
+      resizeCanvas(windowWidth, windowHeight);
+      titleBtn.position((windowWidth - 150) / 2, windowHeight / 2 + 20);
+    }
+  </script>
+</body>
+</html>

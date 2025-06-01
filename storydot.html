@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>p5.js Typing & Dots Sketch</title>
+  <link rel="stylesheet" href="waytohome.css" />
+  <script src="https://cdn.jsdelivr.net/npm/p5@1.4.0/lib/p5.min.js"></script>
+</head>
+<body>
+    <header class="page-header">
+    <div class="header-left">
+        
+        <a href="index.html">
+        <img src="images/back.png" alt="返回" class="btn-icon back-btn" />
+        </a>
+    </div>
+    <div class="header-right">
+        <a href="vetgetable.html">
+        <img src="images/next.png" alt="下一页" class="btn-icon next-btn" />
+        </a>
+    </div>
+    </header>
+
+  <script>
+    let inputBox;
+    let storyBtn, clearBtn;
+    let fullText = "";
+    let typedText = "";
+    let textIndex = 0;
+    let lastTypeTime = 0;
+    const typeInterval = 50;
+
+    let dots = [];
+
+    const fadeDuration = 5000;
+    const growDuration = 8000;
+    const initialSize = 5;
+    const minTargetSize = 10;
+    const maxTargetSize = 50;
+
+    const marginX = 100;
+    const marginY = 100;
+
+    const btnMargin = 20;
+    const btnHeight = 30;
+    const btnWidth = 80;
+    const inputHeight = 50;
+
+    const presetText = "I’m over seventy now. I used to live out in the countryside with my husband, our daughter, and our two sons. When our daughter entered high school, we moved into town so she could study and commute more easily. To support the children’s schooling, we opened a little wonton shop. My daughter worked very hard and was admitted to a fine school; after graduating, she kept striving to find her path in life. Later, she gave birth to my granddaughter—a shy, bright, and introverted little girl who studies diligently and earns excellent grades. On weekends she would come to my home for meals and delight me with stories of her school day. Because she attended a boarding school for middle school, I could see her only on weekends. Then, in high school, she went abroad to study. I pray she takes good care of herself out there. It’s been so long since I last saw her; I wonder how she is doing.";
+
+    function setup() {
+      let fontLink = createElement('link');
+      fontLink.attribute('rel', 'stylesheet');
+      fontLink.attribute('href', 'https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+      textFont('Roboto');
+
+      createCanvas(windowWidth, windowHeight);
+      textSize(32);
+      textAlign(LEFT, TOP);
+      textLeading(40);
+
+      storyBtn = createButton('Story');
+      storyBtn.size(btnWidth, btnHeight);
+      storyBtn.position(
+        btnMargin,
+        windowHeight - inputHeight - btnMargin - btnHeight
+      );
+      storyBtn.mousePressed(() => {
+        fullText = "";
+        typedText = "";
+        textIndex = 0;
+        inputBox.value(presetText);
+        fullText = presetText;
+        lastTypeTime = millis();
+      });
+
+      clearBtn = createButton('Delete');
+      clearBtn.size(btnWidth, btnHeight);
+      clearBtn.position(
+        btnMargin + btnWidth + 10,
+        windowHeight - inputHeight - btnMargin - btnHeight
+      );
+      clearBtn.mousePressed(() => {
+        inputBox.value("");
+        fullText = "";
+        typedText = "";
+        textIndex = 0;
+      });
+
+      inputBox = createElement('textarea');
+      inputBox.position(btnMargin, windowHeight - inputHeight - btnMargin);
+      inputBox.size(windowWidth - 2 * btnMargin, inputHeight);
+      inputBox.style('font-size', '18px');
+      inputBox.style('padding', '4px');
+      inputBox.input(() => {
+        fullText = inputBox.value();
+        typedText = "";
+        textIndex = 0;
+        lastTypeTime = millis();
+      });
+
+      lastTypeTime = millis();
+    }
+
+    function draw() {
+      background(0, 0, 255);
+
+      if (textIndex < fullText.length && millis() - lastTypeTime >= typeInterval) {
+        typedText += fullText.charAt(textIndex);
+        textIndex++;
+        lastTypeTime = millis();
+
+        let x = random(width), y = random(height);
+        let targetSize = random(minTargetSize, maxTargetSize);
+        dots.push({ x, y, createdTime: millis(), targetSize });
+      }
+
+      fill(0);
+      noStroke();
+      text(typedText, marginX, marginY, width - 2 * marginX);
+
+      noStroke();
+      for (let d of dots) {
+        let elapsed = millis() - d.createdTime;
+        let alpha = map(elapsed, 0, fadeDuration, 0.3 * 255, 255);
+        alpha = constrain(alpha, 0.3 * 255, 255);
+        fill(255, alpha);
+        let sz = map(elapsed, 0, growDuration, initialSize, d.targetSize);
+        sz = constrain(sz, initialSize, d.targetSize);
+        ellipse(d.x, d.y, sz);
+      }
+    }
+
+    function windowResized() {
+      resizeCanvas(windowWidth, windowHeight);
+
+      storyBtn.position(
+        btnMargin,
+        windowHeight - inputHeight - btnMargin - btnHeight
+      );
+      clearBtn.position(
+        btnMargin + btnWidth + 10,
+        windowHeight - inputHeight - btnMargin - btnHeight
+      );
+      inputBox.position(btnMargin, windowHeight - inputHeight - btnMargin);
+      inputBox.size(windowWidth - 2 * btnMargin, inputHeight);
+    }
+  </script>
+</body>
+</html>
